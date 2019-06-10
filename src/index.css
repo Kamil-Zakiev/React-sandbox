@@ -52,3 +52,7 @@ body {
   .currentStep {
     background: #55ef7c
   }
+
+  .winCell {
+    background: #ff677f
+  }

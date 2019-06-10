@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 function Square(props){
+  let className = "square " + (props.inWinDirection ? "winCell" : null);
   return (
-    <button className="square" onClick={props.onClick}>
+    <button className={className} onClick={props.onClick}>
       {props.value}
     </button>
   );
@@ -14,6 +15,7 @@ class Board extends React.Component {
   renderSquare(i) {
     return (
       <Square key={i}
+        inWinDirection={this.props.winDirection && this.props.winDirection.indexOf(i) !== -1}
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
       />
@@ -64,7 +66,7 @@ class Game extends React.Component {
 
   render() {
     const current = this.getCurrentBoard();
-    const status = this.getCurrentGameStatus();
+    const [status, winDirection] = this.getCurrentGameStatus();
     const moves = this.getMoves();
     return (
       <div className="game">
@@ -72,6 +74,7 @@ class Game extends React.Component {
           <Board 
             squares={current.squares}
             xIsNext={current.xIsNext}
+            winDirection={winDirection}
             onClick={this.handleClick.bind(this)}/>
         </div>
         <div className="game-info">
@@ -97,7 +100,7 @@ class Game extends React.Component {
   
   handleClick(i) {
     const current = this.getCurrentBoard();
-    if(current.squares[i] || calculateWinner(current.squares)){
+    if(current.squares[i] || calculateWinner(current.squares)[0]){
       return;
     }
 
@@ -117,9 +120,9 @@ class Game extends React.Component {
     return this.state.history[this.state.stepNumber];
   }
 
-  getCurrentGameStatus(){
+  getCurrentGameStatus() {
     const current = this.getCurrentBoard();
-    const winner = calculateWinner(current.squares);
+    const [winner, winDirection] = calculateWinner(current.squares);
     let status;
     if (winner) {
       status = winner + ' has won!';
@@ -127,7 +130,7 @@ class Game extends React.Component {
       status = 'Next player: ' + (current.xIsNext ? 'X' : 'O');
     }
     
-    return status;
+    return [status, winDirection];
   }
 
   getMoves() {    
@@ -178,9 +181,9 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return [squares[a], [a, b, c]];
     }
   }
-  return null;
+  return [null, null];
 }
-  
+ 
