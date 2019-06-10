@@ -49,3 +49,6 @@ body {
     margin-left: 20px;
   }
   
+  .currentStep {
+    background: #55ef7c
+  }
