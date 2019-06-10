@@ -13,7 +13,7 @@ function Square(props){
 class Board extends React.Component {
   renderSquare(i) {
     return (
-      <Square 
+      <Square key={i}
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
       />
@@ -31,7 +31,10 @@ class Board extends React.Component {
         row.push(this.renderSquare(i*rowCount + j));
       }
       rows.push(
-        <div className="board-row">
+        <div 
+          key={i}
+          className="board-row"
+        >
           {row}
         </div>
         );
@@ -54,7 +57,8 @@ class Game extends React.Component {
         squares: Array(9).fill(null),
         xIsNext: true
       }],
-      stepNumber: 0
+      stepNumber: 0,
+      isAsc: true
     };
   }
 
@@ -72,10 +76,23 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{ status }</div>
-          <ul>{ moves }</ul>
+          <div>
+            <button 
+              onClick={this.switchLogDirection.bind(this)}
+            >
+              {this.state.isAsc ? '↓' :'↑'}
+            </button>
+          </div>
+          <ul>{ this.state.isAsc ? moves : moves.reverse() }</ul>
         </div>
       </div>
     );
+  }
+
+  switchLogDirection() {
+    this.setState({
+      isAsc: !this.state.isAsc
+    });
   }
   
   handleClick(i) {
@@ -113,24 +130,25 @@ class Game extends React.Component {
     return status;
   }
 
-  getMoves() {
-    return this.state.history.map((stepInfo, move) => {
-      const cell = stepInfo.cell;
-      const row = Math.floor(cell / 3);
-      const col = cell - row * 3;
-      const step = (row + 1) + ':' + (col + 1);
-      const desc = move === 0 ? 'Go to start' : 'Go to #' + move + '(' + step + ')';
-      return (
-        <li key={move}>
-          <button  
-            className={move === this.state.stepNumber ? "currentStep" : null}
-            onClick={() => this.jumpTo(move)}
-          >
-            {desc}
-          </button>
-        </li>
-      );
-    })
+  getMoves() {    
+    return this.state.history
+      .map((stepInfo, move) => {
+        const cell = stepInfo.cell;
+        const row = Math.floor(cell / 3);
+        const col = cell - row * 3;
+        const step = (row + 1) + ':' + (col + 1);
+        const desc = move === 0 ? 'Go to start' : 'Go to #' + move + '(' + step + ')';
+        return (
+          <li key={move}>
+            <button
+              className={move === this.state.stepNumber ? "currentStep" : null}
+              onClick={() => this.jumpTo(move)}
+            >
+              {desc}
+            </button>
+          </li>
+        );
+      })
   }
 
   jumpTo(move) {
