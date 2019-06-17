@@ -16,7 +16,7 @@ export class Square extends React.Component {
         // lets animate this click!
         var pos = 0;
         var count = 0;
-        var distance = 10;
+        var distance = 6;
         var id = setInterval(frame.bind(this), 15, this);
         function frame() {
             if (count++ === distance) {
