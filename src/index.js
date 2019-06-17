@@ -1,6 +1,27 @@
-import React from 'react';
+import React, {useDebugValue} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>;
+    }
+
+    return this.props.children; 
+  }
+}
 
 function Square(props){
   let className = "square " + (props.inWinDirection ? "winCell" : null);
@@ -71,11 +92,13 @@ class Game extends React.Component {
     return (
       <div className="game">
         <div className="game-board">
-          <Board 
-            squares={current.squares}
-            xIsNext={current.xIsNext}
-            winDirection={winDirection}
-            onClick={this.handleClick.bind(this)}/>
+          <ErrorBoundary>
+            <Board 
+              squares={current.squares}
+              xIsNext={current.xIsNext}
+              winDirection={winDirection}
+              onClick={this.handleClick.bind(this)}/>
+          </ErrorBoundary>
         </div>
         <div className="game-info">
           <div>{ status }</div>
