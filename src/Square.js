@@ -1,13 +1,48 @@
 import React from 'react'
 
-export function Square(props) {
-    let className = "square " + (props.inWinDirection ? "winCell" : null);
-    return (
-        <button 
-            className={className} 
-            onClick={props.onClick}
-        >
-            {props.value}
-        </button>
-    );
+export class Square extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.buttonRef = React.createRef();
+        this.onClick = this.onClick.bind(this);
+    }
+
+    onClick() {
+        // call outside handler
+        this.props.onClick();
+    
+        // lets animate this click!
+        var pos = 0;
+        var count = 0;
+        var distance = 10;
+        var id = setInterval(frame.bind(this), 15, this);
+        function frame() {
+            if (count++ === distance) {
+                clearInterval(id);
+            } else {
+                if (count > distance/2){
+                    pos -= 1;
+                }
+                else{
+                    pos += 1;
+                }
+                this.buttonRef.current.style.top = pos + "px";
+                this.buttonRef.current.style.left = pos + "px";
+            }
+        }
+    }
+    
+    render() {    
+        let className = "square " + (this.props.inWinDirection ? "winCell" : null);
+        return (
+            <button 
+                ref={this.buttonRef}
+                className={className} 
+                onClick={this.onClick}
+            >
+                {this.props.value}
+            </button>
+        );
+    }
 }
