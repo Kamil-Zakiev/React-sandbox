@@ -1,4 +1,5 @@
 import React from 'react'
+import {Themes, ThemeContext} from './ThemeContext'
 
 export class Square extends React.Component {
     constructor(props) {
@@ -36,13 +37,18 @@ export class Square extends React.Component {
     render() {    
         let className = "square " + (this.props.inWinDirection ? "winCell" : null);
         return (
-            <button 
-                ref={this.buttonRef}
-                className={className} 
-                onClick={this.onClick}
-            >
-                {this.props.value}
-            </button>
+            <ThemeContext.Consumer>
+                {theme =>
+                    <button
+                        ref={this.buttonRef}
+                        className={className + ' ' + theme + '-button'}
+                        onClick={this.onClick}
+                    >
+                        {this.props.value}
+                    </button>
+                }
+            </ThemeContext.Consumer>
+            
         );
     }
 }

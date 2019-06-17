@@ -2,6 +2,9 @@ import React from 'react';
 import ErrorBoundary from './ErrorBoundary'
 import Board from './Board'
 import calculateWinner from './calculateWinner'
+import {Themes, ThemeContext} from './ThemeContext'
+import ThemeSwitcher from './ThemeSwitcher'
+import LogDirectionSwitcher from './LogDirectionSwitcher'
 
 export default class Game extends React.Component {
     constructor(props) {
@@ -13,16 +16,29 @@ export default class Game extends React.Component {
           xIsNext: true
         }],
         stepNumber: 0,
-        isAsc: true
+        isAsc: true,
+        theme: Themes.light
       };
+
+      this.handleClick = this.handleClick.bind(this);
+      this.switchLogDirection = this.switchLogDirection.bind(this);
+      this.switchTheme = this.switchTheme.bind(this);
     }
 
     componentDidMount() {
         document.title = this.getCurrentGameStatus()[0];
+
+        // todo: extract this hack:
+        const background = this.state.theme === Themes.dark ? 'black' : 'white'
+        document.getElementById('root').style.background = background;
     }
 
     componentDidUpdate() {
         document.title = this.getCurrentGameStatus()[0];
+
+        // todo: extract this hack:
+        const background = this.state.theme === Themes.dark ? 'black' : 'white'
+        document.getElementById('root').style.background = background;
     }
   
     render() {
@@ -30,28 +46,31 @@ export default class Game extends React.Component {
       const [status, winDirection] = this.getCurrentGameStatus();
       const moves = this.getMoves();
       return (
-        <div className="game">
-          <div className="game-board">
-            <ErrorBoundary>
-              <Board 
-                squares={current.squares}
-                xIsNext={current.xIsNext}
-                winDirection={winDirection}
-                onClick={this.handleClick.bind(this)}/>
-            </ErrorBoundary>
-          </div>
-          <div className="game-info">
-            <div>{ status }</div>
-            <div>
-              <button 
-                onClick={this.switchLogDirection.bind(this)}
-              >
-                {this.state.isAsc ? '↓' :'↑'}
-              </button>
+        <ThemeContext.Provider value={this.state.theme}>
+            <div className="game">
+                <div className="game-board">
+                    <ErrorBoundary>
+                        <Board
+                            squares={current.squares}
+                            xIsNext={current.xIsNext}
+                            winDirection={winDirection}
+                            onClick={this.handleClick}
+                        />
+                    </ErrorBoundary>
+                </div>
+                <div className="game-info">
+                    <div style={{color: 'green'}}>{ status }</div>
+                    <LogDirectionSwitcher 
+                        onClick={this.switchLogDirection}
+                        isAsc={this.state.isAsc}
+                    />
+                    <ThemeSwitcher
+                        onClick={this.switchTheme}
+                    />
+                    <ul style={{color: 'green'}}>{ this.state.isAsc ? moves : moves.reverse() }</ul>
+                </div>
             </div>
-            <ul>{ this.state.isAsc ? moves : moves.reverse() }</ul>
-          </div>
-        </div>
+        </ThemeContext.Provider>
       );
     }
   
@@ -59,6 +78,12 @@ export default class Game extends React.Component {
       this.setState({
         isAsc: !this.state.isAsc
       });
+    }
+
+    switchTheme() {        
+        this.setState({
+          theme: this.state.theme === Themes.dark ? Themes.ligth : Themes.dark
+        });
     }
     
     handleClick(i) {

@@ -12,7 +12,6 @@ body {
 #root {
   height: 100%;
   padding: 20px;
-  background: black;
 }
 
 ol, ul {
@@ -64,6 +63,17 @@ ol, ul {
 
 .currentStep {
   background: #55ef7c
+}
+
+
+.dark-button {
+  background: blue;
+  color: whitesmoke
+}
+
+.light-button {
+  background: white;
+  color: black
 }
 
 .winCell {
