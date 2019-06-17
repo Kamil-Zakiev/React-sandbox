@@ -16,6 +16,14 @@ export default class Game extends React.Component {
         isAsc: true
       };
     }
+
+    componentDidMount() {
+        document.title = this.getCurrentGameStatus()[0];
+    }
+
+    componentDidUpdate() {
+        document.title = this.getCurrentGameStatus()[0];
+    }
   
     render() {
       const current = this.getCurrentBoard();
