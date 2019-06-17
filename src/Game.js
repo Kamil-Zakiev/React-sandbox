@@ -5,6 +5,7 @@ import calculateWinner from './calculateWinner'
 import {Themes, ThemeContext} from './ThemeContext'
 import ThemeSwitcher from './ThemeSwitcher'
 import LogDirectionSwitcher from './LogDirectionSwitcher'
+import Modal from './Modal';
 
 export default class Game extends React.Component {
     constructor(props) {
@@ -17,7 +18,8 @@ export default class Game extends React.Component {
         }],
         stepNumber: 0,
         isAsc: true,
-        theme: Themes.light
+        theme: Themes.light,
+        allowModal: false
       };
 
       this.handleClick = this.handleClick.bind(this);
@@ -29,7 +31,7 @@ export default class Game extends React.Component {
         document.title = this.getCurrentGameStatus()[0];
 
         // todo: extract this hack:
-        const background = this.state.theme === Themes.dark ? 'black' : 'white'
+        const background = this.state.theme === Themes.dark ? 'black' : 'lightblue'
         document.getElementById('root').style.background = background;
     }
 
@@ -37,7 +39,7 @@ export default class Game extends React.Component {
         document.title = this.getCurrentGameStatus()[0];
 
         // todo: extract this hack:
-        const background = this.state.theme === Themes.dark ? 'black' : 'white'
+        const background = this.state.theme === Themes.dark ? 'black' : 'lightblue'
         document.getElementById('root').style.background = background;
     }
   
@@ -69,9 +71,33 @@ export default class Game extends React.Component {
                     />
                     <ul style={{color: 'green'}}>{ this.state.isAsc ? moves : moves.reverse() }</ul>
                 </div>
+                {this.renderModal(status)}
             </div>
         </ThemeContext.Provider>
       );
+    }
+
+    renderModal(status) {
+      // todo: remove this nasty check...
+      if (status === 'Draw' || status.indexOf('won') !== -1) {
+        if(!this.state.allowModal){
+          return null;
+        }
+
+        return (
+          <Modal>
+            <div className='winner-panel'>
+              {status}
+              <div>
+                <button onClick={() => this.setState({allowModal : false})}>
+                  OK
+                </button>
+              </div>
+            </div>
+          </Modal>
+        );
+      }
+      return null;
     }
   
     switchLogDirection() {
@@ -100,7 +126,8 @@ export default class Game extends React.Component {
           xIsNext: !current.xIsNext,
           cell: i
         }),
-        stepNumber: this.state.stepNumber + 1
+        stepNumber: this.state.stepNumber + 1,
+        allowModal: true
       });
     }
   

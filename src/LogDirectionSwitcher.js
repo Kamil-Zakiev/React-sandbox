@@ -1,5 +1,4 @@
 import React from 'react'
-import {Themes, ThemeContext} from './ThemeContext'
 
 export default function LogDirectionSwitcher(props) {
     return (

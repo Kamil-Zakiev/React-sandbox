@@ -1,5 +1,5 @@
 import React from 'react'
-import {Themes, ThemeContext} from './ThemeContext'
+import {ThemeContext} from './ThemeContext'
 
 export class Square extends React.Component {
     constructor(props) {
