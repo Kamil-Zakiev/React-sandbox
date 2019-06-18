@@ -1,28 +1,20 @@
-import React from 'react'
+import {useEffect} from 'react'
 import ReactDOM from 'react-dom';
 
 const modalRoot = document.getElementById('modal-root');
 
-export default class Modal extends React.Component {
-    constructor(props) {
-      super(props);
+export default function Modal(props) {
+    // todo: add get or create...
+    const el = document.createElement('div');
+	el.classList.add('modal');
 
-      this.el = document.createElement('div');
-      this.el.classList.add('modal');
-    }
+	useEffect(() =>{
+		modalRoot.appendChild(el);
+		return () => modalRoot.removeChild(el);
+	}, [el]);
 
-    componentDidMount() {
-      modalRoot.appendChild(this.el);
-    }
-
-    componentWillUnmount() {
-      modalRoot.removeChild(this.el);
-    }
-
-    render() {
-        return ReactDOM.createPortal(
-          this.props.children,
-          this.el
-        );
-    }
+	return ReactDOM.createPortal(
+		props.children,
+		el
+	);
 }

@@ -1,54 +1,37 @@
-import React from 'react'
+import React, {useRef, useContext} from 'react'
 import {ThemeContext} from './ThemeContext'
 
-export class Square extends React.Component {
-    constructor(props) {
-        super(props);
+export function Square(props) {
+    let ref = useRef(null);
 
-        this.buttonRef = React.createRef();
-        this.onClick = this.onClick.bind(this);
-    }
-
-    onClick() {
+    function onClick() {
         // call outside handler
-        this.props.onClick();
+        props.onClick();
     
         // lets animate this click!
         var pos = 0;
         var count = 0;
         var distance = 6;
-        var id = setInterval(frame.bind(this), 15, this);
-        function frame() {
+        var id = setInterval(() => {
             if (count++ === distance) {
                 clearInterval(id);
             } else {
-                if (count > distance/2){
-                    pos -= 1;
-                }
-                else{
-                    pos += 1;
-                }
-                this.buttonRef.current.style.top = pos + "px";
-                this.buttonRef.current.style.left = pos + "px";
+                pos += Math.sign(distance / 2 - count); 
+                ref.current.style.top = pos + "px";
+                ref.current.style.left = pos + "px";
             }
-        }
+        }, 15);
     }
-    
-    render() {    
-        let className = "square " + (this.props.inWinDirection ? "winCell" : null);
-        return (
-            <ThemeContext.Consumer>
-                {theme =>
-                    <button
-                        ref={this.buttonRef}
-                        className={className + ' ' + theme + '-button'}
-                        onClick={this.onClick}
-                    >
-                        {this.props.value}
-                    </button>
-                }
-            </ThemeContext.Consumer>
-            
-        );
-    }
+
+    const theme = useContext(ThemeContext);
+    let className = 'square ' + (props.inWinDirection ? 'winCell' : null) + ' ' + theme + '-button';
+    return (
+        <button
+            ref={ref}
+            className={className}
+            onClick={onClick}
+        >
+            {props.value}
+        </button>
+    );
 }
