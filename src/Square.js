@@ -16,7 +16,7 @@ export function Square(props) {
             if (count++ === distance) {
                 clearInterval(id);
             } else {
-                pos += Math.sign(distance / 2 - count); 
+                pos += Math.sign(distance / 2 - count + 0.1); // math magic
                 ref.current.style.top = pos + "px";
                 ref.current.style.left = pos + "px";
             }
