@@ -1,11 +1,28 @@
 import React from 'react'
 
-export default function LogDirectionSwitcher(props) {
+import { connect } from 'react-redux'
+import { ChangeLogDirection } from './store/actionCreators'
+
+function LogDirectionSwitcher(props) {
     return (
-        <button 
-            onClick={props.onClick}
+        <button
+            onClick={props.onLogDirectionChange}
         >
-            {props.isAsc ? '↓' :'↑'}
+            {props.isAsc ? '↓' : '↑'}
         </button>
     );
 }
+
+function mapStateToProps(state) {
+    return {
+        isAsc: state.isAsc
+    };
+}
+
+function mapDispathToProp(dispatch) {
+    return {
+        onLogDirectionChange: () => ChangeLogDirection()
+    };
+}
+
+export default connect(mapStateToProps, mapDispathToProp)(LogDirectionSwitcher);

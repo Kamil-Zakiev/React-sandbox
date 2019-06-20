@@ -1,7 +1,10 @@
 import React, {useRef, useEffect} from 'react';
 import Modal from './Modal'
 
-export default function WinnerModal(props) {
+import {connect} from 'react-redux'
+import {SetAllowModal} from './store/actionCreators'
+
+function WinnerModal(props) {
     const ref = useFocusing();
     return (
         <Modal>
@@ -10,7 +13,7 @@ export default function WinnerModal(props) {
                 <div>
                     <button
                         ref={ref}
-                        onClick={props.onClick}
+                        onClick={props.onOkClicked}
                     >
                         OK
                     </button>
@@ -30,3 +33,11 @@ function useFocusing() {
     });
     return ref;
 }
+
+function mapDispatchToProps(dispatch) {
+    return {
+        onOkClicked: () => dispatch(SetAllowModal(false))
+    };
+}
+
+export default connect(null, mapDispatchToProps)(WinnerModal);
