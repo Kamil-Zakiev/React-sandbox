@@ -1,50 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import ErrorBoundary from './ErrorBoundary'
 import Board from './Board'
-import { calculateWinner, currentStatus, isGameOver } from './calculateWinner'
+import { currentStatus, isGameOver } from './calculateWinner'
 import { Themes, ThemeContext } from './ThemeContext'
 import ThemeSwitcher from './ThemeSwitcher'
 import LogDirectionSwitcher from './LogDirectionSwitcher'
 import WinnerModal from './WinnerModal';
 import MovesList from './MovesList';
+import { connect } from 'react-redux'
+import * as actionCreators from './store/actionCreators'
 
 const appRoot = document.getElementById('root');
 
-export default function Game(props) {
-    const [history, setHistory] = useState([{
-        squares: Array(9).fill(null),
-        xIsNext: true
-    }]);
-    const [stepNumber, setStepNumber] = useState(0);
-    const [isAsc, setIsAsc] = useState(true);
-    const [theme, setTheme] = useState(Themes.ligth);
-    const [allowModal, setAllowModal] = useState(false);
+function mapStateToProps(state) {
+    return {
+        history: state.history,
+        stepNumber: state.stepNumber,
+        isAsc: state.isAsc,
+        theme: state.theme,
+        allowModal: state.allowModal,
+    };
+}
 
-    const current = history[stepNumber];
+function mapDispatchToProps(dispatch) {
+    return {
+        onCellClick: (i) => dispatch(actionCreators.ClickCell(i)),
+        onChangeTheme: () => dispatch(actionCreators.ChangeTheme()),
+        onChangeLogDirection: () => dispatch(actionCreators.ChangeLogDirection()),
+        onMoveToStep: (step) => dispatch(actionCreators.MoveToStep(step)),
+        onSetAllowModal: () => dispatch(actionCreators.SetAllowModal(false))
+    };
+}
+
+function Game(props) {
+    const current = props.history[props.stepNumber];
     const [status, winDirection] = currentStatus(current);
 
     useEffect(() => { document.title = status; }, [status]);
-
-    useEffect(() => { appRoot.style.background = Themes.classFor(theme); }, [theme]);
-
-    function handleClick(i) {
-        if (current.squares[i] || calculateWinner(current.squares)[0]) {
-            return;
-        }
-
-        const squares = current.squares.slice();
-        squares[i] = current.xIsNext ? 'X' : 'O';
-        setHistory(history.slice(0, stepNumber + 1).concat({
-            squares: squares,
-            xIsNext: !current.xIsNext,
-            cell: i
-        }));
-        setStepNumber(s => s + 1);
-        setAllowModal(true);
-    }
+    useEffect(() => { appRoot.style.background = Themes.classFor(props.theme); }, [props.theme]);
 
     return (
-        <ThemeContext.Provider value={theme}>
+        <ThemeContext.Provider value={props.theme}>
             <div className="game">
                 <div className="game-board">
                     <ErrorBoundary>
@@ -52,32 +48,34 @@ export default function Game(props) {
                             squares={current.squares}
                             xIsNext={current.xIsNext}
                             winDirection={winDirection}
-                            onClick={handleClick}
+                            onClick={props.onCellClick}
                         />
                     </ErrorBoundary>
                 </div>
                 <div className="game-info">
                     <div style={{ color: 'green' }}>{status}</div>
                     <LogDirectionSwitcher
-                        onClick={() => setIsAsc(!isAsc)}
-                        isAsc={isAsc}
+                        onClick={props.onChangeLogDirection}
+                        isAsc={props.isAsc}
                     />
                     <ThemeSwitcher
-                        onClick={() => setTheme(Themes.oppositeOf(theme))}
+                        onClick={props.onChangeTheme}
                     />
                     <MovesList
-                        history={history}
-                        isAsc={isAsc}
-                        stepNumber={stepNumber}
-                        onStepClick={(step) => setStepNumber(step)}
+                        history={props.history}
+                        isAsc={props.isAsc}
+                        stepNumber={props.stepNumber}
+                        onStepClick={props.onMoveToStep}
                     />
                 </div>
-                {isGameOver(status) && allowModal &&
+                {isGameOver(status) && props.allowModal &&
                     <WinnerModal
                         status={status}
-                        onClick={() => setAllowModal(false)}
+                        onClick={props.onSetAllowModal}
                     />}
             </div>
         </ThemeContext.Provider>
     );
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
