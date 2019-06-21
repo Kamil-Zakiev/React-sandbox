@@ -21,7 +21,7 @@ function mapStateToProps(state) {
 
 function mapDispathToProp(dispatch) {
     return {
-        onLogDirectionChange: () => ChangeLogDirection()
+        onLogDirectionChange: () => dispatch(ChangeLogDirection())
     };
 }
 

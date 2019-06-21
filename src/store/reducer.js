@@ -1,5 +1,6 @@
 import { calculateWinner } from '../calculateWinner'
 import { Themes } from '../ThemeContext'
+import * as actions from './actions'
 
 const initialState = {
     history: [{
@@ -15,7 +16,7 @@ const initialState = {
 export default function reducer(state = initialState, action) {
     var newState = { ...state };
 
-    if (action.type === 'CLICK_CELL') {
+    if (action.type === actions.CLICK_CELL) {
         const current = newState.history[newState.stepNumber];
         if (current.squares[action.cell] || calculateWinner(current.squares)[0]) {
             return newState;
@@ -36,19 +37,19 @@ export default function reducer(state = initialState, action) {
         newState.allowModal = true;
     }
 
-    if (action.type === 'CHANGE_THEME') {
+    if (action.type === actions.CHANGE_THEME) {
         newState.theme = Themes.oppositeOf(newState.theme);
     }
 
-    if (action.type === 'CHANGE_LOG_DIR') {
+    if (action.type === actions.CHANGE_LOG_DIR) {
         newState.isAsc = !newState.isAsc;
     }
 
-    if (action.type === 'MOVE_TO_STEP') {
+    if (action.type === actions.MOVE_TO_STEP) {
         newState.stepNumber = action.step;
     }
 
-    if (action.type === 'SET_ALLOW_MODAL') {
+    if (action.type === actions.SET_ALLOW_MODAL) {
         newState.allowModal = action.isAllowed;
     }
 

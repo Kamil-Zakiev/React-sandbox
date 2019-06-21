@@ -52,6 +52,7 @@ function mapStateToProps(state) {
         history: state.history,
         stepNumber: state.stepNumber,
         allowModal: state.allowModal,
+        theme: state.theme
     };
 }
 

@@ -1,32 +1,34 @@
+import * as actions from './actions'
+
 const ClickCell = (i) => {
     return {
-        type: 'CLICK_CELL',
+        type: actions.CLICK_CELL,
         cell: i
     };
 };
 
 const ChangeTheme = () => {
     return {
-        type: 'CHANGE_THEME'
+        type: actions.CHANGE_THEME
     };
 };
 
 const ChangeLogDirection = () => {
     return {
-        type: 'CHANGE_LOG_DIR'
+        type: actions.CHANGE_LOG_DIR
     };
 };
 
 const MoveToStep = (step) => {
     return {
-        type: 'MOVE_TO_STEP',
+        type: actions.MOVE_TO_STEP,
         step: step
     };
 };
 
 const SetAllowModal = (isAllowed) => {
     return {
-        type: 'SET_ALLOW_MODAL',
+        type: actions.SET_ALLOW_MODAL,
         isAllowed: isAllowed
     };
 };
