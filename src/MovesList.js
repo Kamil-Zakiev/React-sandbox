@@ -2,6 +2,7 @@ import React from 'react'
 
 import { connect } from 'react-redux'
 import * as actionCreators from './store/actionCreators'
+import {hackCrossThemeStyle} from './hacks'
 
 function MovesList(props) {
     const moves = props.history
@@ -21,9 +22,6 @@ function MovesList(props) {
             );
         });
 
-    const hackCrossThemeStyle = {
-        color: 'green'
-    };
     return (
         <ul style={hackCrossThemeStyle}>
             {props.isAsc ? moves : moves.reverse()}

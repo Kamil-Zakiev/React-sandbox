@@ -1,4 +1,4 @@
-export function calculateWinner(squares) {
+function calculateWinner(squares) {
     const lines = [
         [0, 1, 2],
         [3, 4, 5],
@@ -31,9 +31,13 @@ export function currentStatus(board) {
             : 'Next player: ' + (board.xIsNext ? 'X' : 'O');
     }
 
-    return [status, winDirection];
+    return [status, winner, winDirection];
 }
 
-export function isGameOver(status) {
-    return status === 'Draw' || status.indexOf('won') !== -1;
+export function isGameOver(board) {
+    const [status] = currentStatus(board);
+    const result = status === 'Draw' || status.indexOf('won') !== -1;
+    return result;
 }
+
+export const isNotGameOver = (board) => !isGameOver(board);

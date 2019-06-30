@@ -8,52 +8,42 @@ import LogDirectionSwitcher from './LogDirectionSwitcher'
 import WinnerModal from './WinnerModal';
 import MovesList from './MovesList';
 import { connect } from 'react-redux'
-
-const appRoot = document.getElementById('root');
+import { hackCrossThemeStyle } from './hacks'
 
 function Game(props) {
-    const current = props.history[props.stepNumber];
-    const [status, winDirection] = currentStatus(current);
+  useEffect(() => { document.getElementById('root').style.background = Themes.classFor(props.theme); }, [props.theme]);
 
-    useEffect(() => { document.title = status; }, [status]);
-    useEffect(() => { appRoot.style.background = Themes.classFor(props.theme); }, [props.theme]);
-
-    const hackCrossThemeStyle = {
-        color: 'green'
-    };
-
-    const game = (
+  return (
+    <ErrorBoundary>
+      <ThemeContext.Provider value={props.theme}>
         <div className="game">
-            <div className="game-board">
-                <Board winDirection={winDirection} />
-            </div>
-            <div className="game-info">
-                <div style={hackCrossThemeStyle}>{status}</div>
-                <LogDirectionSwitcher />
-                <ThemeSwitcher />
-                <MovesList />
-            </div>
-            {isGameOver(status) && props.allowModal &&
-                <WinnerModal status={status} />}
+          <div className="game-board">
+            <Board />
+          </div>
+          <div className="game-info">
+            <div style={hackCrossThemeStyle}>{props.status}</div>
+            <LogDirectionSwitcher />
+            <ThemeSwitcher />
+            <MovesList />
+          </div>
+          {props.shouldShowEndWindow &&
+            <WinnerModal />}
         </div>
-    );
-
-    return (
-        <ErrorBoundary>
-            <ThemeContext.Provider value={props.theme}>
-                {game}
-            </ThemeContext.Provider>
-        </ErrorBoundary>
-    );
+      </ThemeContext.Provider>
+    </ErrorBoundary>
+  );
 }
 
 function mapStateToProps(state) {
-    return {
-        history: state.history,
-        stepNumber: state.stepNumber,
-        allowModal: state.allowModal,
-        theme: state.theme
-    };
+  const actualBoard = state.history[state.stepNumber];
+  const [status] = currentStatus(actualBoard);
+  const shouldShowEndWindow = isGameOver(actualBoard) && !state.gameState.ack;
+  
+  return {
+    theme: state.theme,
+    status,
+    shouldShowEndWindow
+  };
 }
 
 export default connect(mapStateToProps)(Game);

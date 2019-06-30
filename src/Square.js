@@ -1,14 +1,17 @@
-import React, {useRef, useContext} from 'react'
-import {ThemeContext} from './ThemeContext'
+import React, { useRef, useContext, useCallback } from 'react'
+import { connect } from 'react-redux'
+import { ThemeContext } from './ThemeContext'
+import { currentStatus } from './calculateWinner'
+import { ClickCell } from './store/actionCreators'
 
-export function Square(props) {
-    let ref = useRef(null);
+function Square(props) {
+    const ref = useRef(null);
+    const { index, dispatch } = props;
+    const onClick = useCallback(() => {
+        dispatch(ClickCell(index));
 
-    function onClick() {
-        // call outside handler
-        props.onClick();
-    
         // lets animate this click!
+        // todo: this side effect could be a candidate for a extract to a saga
         var pos = 0;
         var count = 0;
         var distance = 6;
@@ -21,7 +24,7 @@ export function Square(props) {
                 ref.current.style.left = pos + "px";
             }
         }, 15);
-    }
+    }, [index, dispatch]);
 
     const theme = useContext(ThemeContext);
     let className = 'square ' + (props.inWinDirection ? 'winCell' : null) + ' ' + theme + '-button';
@@ -35,3 +38,13 @@ export function Square(props) {
         </button>
     );
 }
+
+function mapStateToProps(state, props) {
+    const [, , winDirection] = currentStatus(state.history[state.stepNumber]);
+    return {
+        value: state.history[state.stepNumber].squares[props.index],
+        inWinDirection: winDirection && winDirection.indexOf(props.index) !== -1
+    }
+}
+
+export default connect(mapStateToProps)(Square);
