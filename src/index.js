@@ -7,9 +7,8 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import reducer from './store/reducer'
 import createSagaMiddleware from 'redux-saga';
-import { all } from 'redux-saga/effects'
+import rootSaga from './store/sagas';
 
-import { cellClickingSaga, opponentHasPressed } from './store/cellClickingSaga';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -20,12 +19,7 @@ const store = createStore(reducer,
         reduxDevTools && reduxDevTools()
     ));
 
-sagaMiddleware.run(function* rootSaga() {
-    yield all([
-        cellClickingSaga(),
-        opponentHasPressed()
-    ]);
-});
+sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
     <Provider store={store}>

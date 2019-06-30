@@ -33,4 +33,23 @@ const SetAllowModal = (isAllowed) => {
     };
 };
 
-export { ClickCell, ChangeTheme, ChangeLogDirection, MoveToStep, SetAllowModal };
+const CellPressed = (cell) => {
+    return {
+        type: actions.CELL_PRESSED,
+        payload: {
+            cell: cell
+        }
+    };
+};
+
+const GameOver = ({winner, winPath}) => {
+    return {
+        type: actions.GAME_OVER,
+        payload: {
+            winner, 
+            winPath
+        }
+    };
+};
+
+export { ClickCell, ChangeTheme, ChangeLogDirection, MoveToStep, SetAllowModal, CellPressed, GameOver };

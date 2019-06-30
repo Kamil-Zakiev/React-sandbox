@@ -1,4 +1,4 @@
-import { calculateWinner } from '../calculateWinner'
+import { isGameOver } from '../calculateWinner'
 import { Themes } from '../ThemeContext'
 import * as actions from './actions'
 
@@ -10,31 +10,37 @@ const initialState = {
     stepNumber: 0,
     isAsc: true,
     theme: Themes.light,
-    allowModal: false
+    gameState: {
+        ack: false
+    }
 };
 
 export default function reducer(state = initialState, action) {
     var newState = { ...state };
 
-    if (action.type === actions.CLICK_CELL) {
+    if (action.type === actions.CELL_PRESSED) {
         const current = newState.history[newState.stepNumber];
-        if (current.squares[action.cell] || calculateWinner(current.squares)[0]) {
+        const pressedCell = action.payload.cell;
+        if (current.squares[pressedCell] || isGameOver(current)) {
             return newState;
         }
 
         const squares = current.squares.slice();
-        squares[action.cell] = current.xIsNext ? 'X' : 'O';
-        
+        squares[pressedCell] = current.xIsNext ? 'X' : 'O';
+
         // need to provide a new array to keep a function pure
         newState.history = newState.history
             .slice(0, newState.stepNumber + 1)
             .concat({
                 squares: squares,
                 xIsNext: !current.xIsNext,
-                cell: action.cell
+                cell: pressedCell
             });
         newState.stepNumber++;
         newState.allowModal = true;
+        newState.gameState = Object.assign({}, newState.gameState, {
+            ack: false
+        });
     }
 
     if (action.type === actions.CHANGE_THEME) {
@@ -47,10 +53,15 @@ export default function reducer(state = initialState, action) {
 
     if (action.type === actions.MOVE_TO_STEP) {
         newState.stepNumber = action.step;
+        newState.gameState = Object.assign({}, state.gameState, {
+            ack: false
+        });
     }
 
     if (action.type === actions.SET_ALLOW_MODAL) {
-        newState.allowModal = action.isAllowed;
+        newState.gameState = Object.assign({}, state.gameState, {
+            ack: true
+        });
     }
 
     return newState;
