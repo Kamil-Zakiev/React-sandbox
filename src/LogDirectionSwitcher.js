@@ -6,6 +6,7 @@ import { ChangeLogDirection } from './store/actionCreators'
 function LogDirectionSwitcher(props) {
     return (
         <button
+            className='control'
             onClick={props.onLogDirectionChange}
         >
             {props.isAsc ? '↓' : '↑'}

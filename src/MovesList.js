@@ -10,10 +10,11 @@ function MovesList(props) {
             const desc = move === 0
                 ? 'Go to start'
                 : `Go to #${move}(${getCoords(stepInfo)})`;
+            const className = move === props.stepNumber ? 'control currentStep' : 'control';
             return (
                 <li key={move}>
                     <button
-                        className={move === props.stepNumber ? 'currentStep' : null}
+                        className={className}
                         onClick={() => props.onMoveToStep(move)}
                     >
                         {desc}

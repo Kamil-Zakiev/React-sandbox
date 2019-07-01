@@ -4,7 +4,10 @@ import * as actionCreators from './store/actionCreators';
 
 function ThemeSwitcher(props) {
     return (
-        <button onClick={props.onThemeChange}>
+        <button 
+            className='control'
+            onClick={props.onThemeChange}
+        >
             Switch theme
         </button>
     );
