@@ -13,11 +13,10 @@ import rootSaga from './store/sagas';
 const sagaMiddleware = createSagaMiddleware();
 
 const reduxDevTools = window.__REDUX_DEVTOOLS_EXTENSION__;
-const store = createStore(reducer,
-    compose(
-        applyMiddleware(sagaMiddleware),
-        reduxDevTools && reduxDevTools()
-    ));
+const enhancer = reduxDevTools
+    ? compose(applyMiddleware(sagaMiddleware), reduxDevTools())
+    : applyMiddleware(sagaMiddleware);
+const store = createStore(reducer,enhancer);
 
 sagaMiddleware.run(rootSaga);
 
