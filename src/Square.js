@@ -3,38 +3,24 @@ import { connect } from 'react-redux'
 import { ThemeContext } from './ThemeContext'
 import { currentStatus } from './calculateWinner'
 import { ClickCell } from './store/actionCreators'
+import click from './effects/click';
 
-function Square(props) {
+function Square({ index, dispatch, inWinDirection, value }) {
     const ref = useRef(null);
-    const { index, dispatch } = props;
     const onClick = useCallback(() => {
         dispatch(ClickCell(index));
-
-        // lets animate this click!
-        // todo: this side effect could be a candidate for a extract to a saga
-        var pos = 0;
-        var count = 0;
-        var distance = 6;
-        var id = setInterval(() => {
-            if (count++ === distance) {
-                clearInterval(id);
-            } else {
-                pos += Math.sign(distance / 2 - count + 0.1); // math magic
-                ref.current.style.top = pos + "px";
-                ref.current.style.left = pos + "px";
-            }
-        }, 15);
-    }, [index, dispatch]);
+        click(ref.current);
+    }, [index, dispatch]); // suppose ref.current is always actual so not incuding to dependency list
 
     const theme = useContext(ThemeContext);
-    let className = 'square ' + (props.inWinDirection ? 'winCell' : null) + ' ' + theme + '-button';
+    const className = `square ${inWinDirection && 'winCell'} ${theme}-button`;
     return (
         <button
             ref={ref}
             className={className}
             onClick={onClick}
         >
-            {props.value}
+            {value}
         </button>
     );
 }
