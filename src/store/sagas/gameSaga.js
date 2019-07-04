@@ -1,8 +1,8 @@
 import { call, put, take, select } from 'redux-saga/effects'
-import { CLICK_CELL, MOVE_TO_STEP } from '../actions';
+import { CLICK_CELL, MOVE_TO_STEP } from '../actionTypes';
 import Api from '../../api';
 import { isGameOver, currentStatus } from '../../calculateWinner';
-import { CellPressed, GameOver } from '../actionCreators';
+import { CellPressed } from '../actionCreators';
 
 import {currentBoardSelector} from '../selectors'
 
@@ -20,11 +20,7 @@ export default function* gameSaga() {
 
         const actualBoard = yield select(currentBoardSelector);
 
-        const [status, winner, winDirection] = currentStatus(actualBoard);
+        const [status] = currentStatus(actualBoard);
         document.title = status;
-
-        if (isGameOver(actualBoard)) {
-            yield put(GameOver({winner, winDirection}));
-        }
     }
 }

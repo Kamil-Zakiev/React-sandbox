@@ -1,4 +1,4 @@
-import * as actions from './actions'
+import * as actions from './actionTypes'
 
 const ClickCell = (i) => {
     return {
@@ -42,14 +42,4 @@ const CellPressed = (cell) => {
     };
 };
 
-const GameOver = ({winner, winPath}) => {
-    return {
-        type: actions.GAME_OVER,
-        payload: {
-            winner, 
-            winPath
-        }
-    };
-};
-
-export { ClickCell, ChangeTheme, ChangeLogDirection, MoveToStep, SetAllowModal, CellPressed, GameOver };
+export { ClickCell, ChangeTheme, ChangeLogDirection, MoveToStep, SetAllowModal, CellPressed };

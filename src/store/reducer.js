@@ -1,6 +1,6 @@
 import { isGameOver } from '../calculateWinner'
 import { Themes } from '../ThemeContext'
-import * as actions from './actions'
+import * as actions from './actionTypes'
 
 const initialState = {
     history: [{

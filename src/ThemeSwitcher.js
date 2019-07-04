@@ -1,12 +1,12 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as actionCreators from './store/actionCreators';
 
-function ThemeSwitcher(props) {
+function ThemeSwitcher({ onThemeChange }) {
     return (
-        <button 
+        <button
             className='control'
-            onClick={props.onThemeChange}
+            onClick={onThemeChange}
         >
             Switch theme
         </button>

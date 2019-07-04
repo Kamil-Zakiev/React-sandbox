@@ -6,16 +6,17 @@ const Board = () => {
   const colCount = 3;
 
   let rows = [];
+  let squareIndex = 0;
   for (let i = 0; i < rowCount; i++) {
     let row = [];
     for (let j = 0; j < colCount; j++) {
-      const squareIndex = i * rowCount + j;
       row.push(
         <Square
           key={squareIndex}
           index={squareIndex}
         />
       );
+      squareIndex++;
     }
     rows.push(
       <div

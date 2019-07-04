@@ -4,7 +4,6 @@ const CHANGE_THEME = 'CHANGE_THEME';
 const CHANGE_LOG_DIR = 'CHANGE_LOG_DIR';
 const MOVE_TO_STEP = 'MOVE_TO_STEP';
 const SET_ALLOW_MODAL = 'SET_ALLOW_MODAL';
-const GAME_OVER = 'GAME_OVER';
 
 export {
     CLICK_CELL, 
@@ -12,6 +11,5 @@ export {
     CHANGE_THEME, 
     CHANGE_LOG_DIR, 
     MOVE_TO_STEP, 
-    SET_ALLOW_MODAL,
-    GAME_OVER
+    SET_ALLOW_MODAL
 };

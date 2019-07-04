@@ -1,5 +1,5 @@
 import { race, take, delay, select } from 'redux-saga/effects'
-import { CLICK_CELL, CELL_PRESSED, MOVE_TO_STEP } from '../actions';
+import { CLICK_CELL, CELL_PRESSED, MOVE_TO_STEP } from '../actionTypes';
 import { isGameOver } from '../../calculateWinner';
 import { currentBoardSelector, opponentSelector } from '../selectors'
 

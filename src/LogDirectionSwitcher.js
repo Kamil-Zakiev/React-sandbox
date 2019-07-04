@@ -1,15 +1,14 @@
 import React from 'react'
-
 import { connect } from 'react-redux'
 import { ChangeLogDirection } from './store/actionCreators'
 
-function LogDirectionSwitcher(props) {
+function LogDirectionSwitcher({ isAsc, onLogDirectionChange }) {
     return (
         <button
             className='control'
-            onClick={props.onLogDirectionChange}
+            onClick={onLogDirectionChange}
         >
-            {props.isAsc ? '↓' : '↑'}
+            {isAsc ? '↓' : '↑'}
         </button>
     );
 }

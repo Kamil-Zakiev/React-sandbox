@@ -1,20 +1,19 @@
 import React, { useRef, useEffect } from 'react';
 import Modal from './Modal'
 import { currentStatus } from './calculateWinner'
-
 import { connect } from 'react-redux'
 import { SetAllowModal } from './store/actionCreators'
 
-function WinnerModal(props) {
+function WinnerModal({ status, onOkClicked }) {
   const ref = useFocusing();
   return (
     <Modal>
       <div className='winner-panel'>
-        {props.status}
+        {status}
         <div>
           <button
             ref={ref}
-            onClick={props.onOkClicked}
+            onClick={onOkClicked}
           >
             OK
           </button>
