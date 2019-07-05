@@ -3,9 +3,12 @@ import renderer from 'react-test-renderer';
 import { Square } from './Square'
 import click from './effects/click'
 import { ClickCell } from './store/actionCreators';
-import { ThemeContext, Themes } from './ThemeContext';
+import { ThemeContext } from './ThemeContext';
+import { shallow, configure } from 'enzyme'
+import Adapter from 'enzyme-adapter-react-16';
 
 jest.mock('./effects/click')
+configure({ adapter: new Adapter() });
 
 describe('<Square />', () => {
     function prepareComponent(inWinDirection = false) {
@@ -39,19 +42,31 @@ describe('<Square />', () => {
     });
 
     it('should dispatch a ClickCell action when is clicked', () => {
-        const { props, component } = prepareComponent();
+        const props = {
+            index: 5,
+            dispatch: jest.fn(),
+            inWinDirection: false,
+            value: 'X'
+        };
 
-        const tree = component.toJSON();
-        tree.props.onClick();
+        const wrapper = shallow(<Square {...props} />);
+        wrapper.find('button').simulate('click');
+
         expect(props.dispatch.mock.calls.length).toBe(1);
         expect(props.dispatch.mock.calls[0][0]).toEqual(ClickCell(props.index));
     });
 
-    it('should apply click effect when is clicked', () => {
-        const { component } = prepareComponent();
+    it('should apply click effect when is clicked', () => {        
+        const props = {
+            index: 5,
+            dispatch: jest.fn(),
+            inWinDirection: false,
+            value: 'X'
+        };
 
-        const tree = component.toJSON();
-        tree.props.onClick();
+        const wrapper = shallow(<Square {...props} />);
+        wrapper.find('button').simulate('click');
+        
         expect(click.mock.calls.length).toBe(1);
     });
 
