@@ -5,7 +5,7 @@ import { currentStatus } from './calculateWinner'
 import { ClickCell } from './store/actionCreators'
 import click from './effects/click';
 
-function Square({ index, dispatch, inWinDirection, value }) {
+export function Square({ index, dispatch, inWinDirection, value }) {
     const ref = useRef(null);
     const onClick = useCallback(() => {
         dispatch(ClickCell(index));
