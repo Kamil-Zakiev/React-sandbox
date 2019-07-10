@@ -96,7 +96,9 @@ ul {
 }
 
 .winCell {
-  background: #ff677f
+  transition-property: background-color;
+  transition-duration: 1s;
+  background: #ff677f;
 }
 
 #modal-root {

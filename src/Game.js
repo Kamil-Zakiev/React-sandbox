@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ErrorBoundary from './ErrorBoundary'
 import Board from './Board'
 import { currentStatus, isGameOver } from './calculateWinner'
@@ -12,6 +12,17 @@ import { hackCrossThemeStyle } from './hacks'
 
 function Game({ theme, status, shouldShowEndWindow }) {
   useEffect(() => { document.getElementById('root').style.background = Themes.classFor(theme); }, [theme]);
+  const [showWindow, setShowWindow] = useState(false);
+  useEffect(() => {
+    if (shouldShowEndWindow) {
+      var id = setTimeout(() => setShowWindow(true), 500);
+    }
+
+    return () => {
+      clearTimeout(id);
+      setShowWindow(false);
+    };
+  }, [shouldShowEndWindow]);
 
   return (
     <ErrorBoundary>
@@ -26,7 +37,7 @@ function Game({ theme, status, shouldShowEndWindow }) {
             <ThemeSwitcher />
             <MovesList />
           </div>
-          {shouldShowEndWindow &&
+          {showWindow &&
             <WinnerModal />}
         </div>
       </ThemeContext.Provider>
