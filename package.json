@@ -13,7 +13,7 @@
     "redux": "^4.0.4",
     "redux-saga": "^1.1.1",
     "eslint-utils": ">=1.4.1",
-    "lodash": ">=4.17.13",
+    "lodash": ">=4.17.19",
     "lodash.template": ">=4.5.0"
   },
   "scripts": {
